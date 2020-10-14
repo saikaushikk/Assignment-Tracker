@@ -1,0 +1,77 @@
+@* @page *@
+@page "{searchString?}"
+@model AssignmentTracker.Pages.Assignments.IndexModel
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+<h1>Keep track of your assignments easily!</h1>
+<br>
+<h4>Sort based on Due date. Filter based on subject or title or both</h4>
+<br>
+<h4>
+    <a asp-page="Create">Create New</a>
+</h4>
+<br>
+<form>
+    <h6>
+        Filter by subject:<select asp-for="Subject" asp-items="Model.Subjects">
+            <option value="">All</option>
+        </select>
+        Search by title: <input type="text" asp-for="SearchString" />
+        <input type="submit" value="Filter" />
+    </h6>
+</form>
+<br>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Assignment[0].Title)
+            </th>
+            <th>
+                <a asp-page="./Index" asp-route-sortOrder="@Model.DateSort">
+                    @Html.DisplayNameFor(model => model.Assignment[0].DueDate)
+                </a>
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Assignment[0].Subject)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Assignment[0].Link)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Assignment) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DueDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Subject)
+            </td>
+            <td>
+                @* @Html.DisplayFor(modelItem => item.Link) *@
+                @* @Html.RouteLink(modelItem => item.Link) *@
+                @* @Html.ActionLink(modelItem => item.Link) *@
+                @* <a href = "${item.Link}"></a> *@
+                @if (!String.IsNullOrEmpty(Convert.ToString(item.Link)))
+                { 
+                    <a href='@Url.Content(item.Link)' target="_blank" rel="noopener noreferrer">@Html.DisplayFor(modelItem => item.Link)</a>
+                }
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.ID">Mark as complete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
